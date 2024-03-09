@@ -3,6 +3,7 @@ from datetime import datetime
 from ..extensions import db, ma
 from marshmallow import fields
 
+
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
@@ -12,13 +13,11 @@ class User(db.Model):
     date_created = db.Column(db.DateTime, default=datetime.utcnow)
     last_login = db.Column(db.DateTime, onupdate=datetime.utcnow)
 
+
 class UserSchema(ma.Schema):
-    cards = fields.List(fields.Nested("CardSchema", exclude=["user"]))
-    comments = fields.List(fields.Nested("CommentSchema", exclude=["user"]))
-
     class Meta:
-        fields = ("id", "name", "email", "password", "is_admin", "cards", "comments")
+        fields = ("id", "username", "email", "password_hash", "role", "date_created", "last_login")
 
 
-user_schema = UserSchema(exclude=["password"])
-users_schema = UserSchema(many=True, exclude=["password"])
+user_schema = UserSchema(exclude=["password_hash"])
+users_schema = UserSchema(many=True, exclude=["password_hash"])

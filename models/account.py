@@ -25,7 +25,8 @@ class AccountSchema(ma.Schema):
     user = fields.Nested("UserSchema", only=["username", "email"])
 
     class Meta:
-        fields = ("account_id", "user", "account_type", "balance", "date_created")
+        fields = ("account_id", "account_type", "balance", "date_created", "user")
+        ordered = True
 
 
 account_schema = AccountSchema()

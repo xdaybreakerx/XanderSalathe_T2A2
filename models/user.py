@@ -25,7 +25,7 @@ class User(db.Model):
 class UserSchema(ma.Schema):
     role = fields.String(validate=OneOf(VALID_ROLE))
 
-    accounts = fields.List(fields.Nested("AccountSchema", exclude=["user"]))
+    account = fields.List(fields.Nested("AccountSchema", exclude=["user"]))
 
     class Meta:
         fields = (

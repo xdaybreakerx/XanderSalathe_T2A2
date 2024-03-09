@@ -43,8 +43,8 @@ def seed_tables():
             role="Auditor",
         ),
     ]
-    
+
     db.session.add_all(users)
     db.session.commit()
-    
+
     print("Tables seeded")

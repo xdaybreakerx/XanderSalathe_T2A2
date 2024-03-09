@@ -1,7 +1,6 @@
 from os import environ
 
-from flask import Flask, jsonify
-from dotenv import load_dotenv
+from flask import Flask
 
 from .extensions import db, ma, bcrypt, jwt
 

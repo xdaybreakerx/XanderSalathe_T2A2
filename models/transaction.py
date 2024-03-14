@@ -10,7 +10,7 @@ class Transaction(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     account_id = db.Column(
-        db.Integer, db.ForeignKey("account.id"), nullable=False
+        db.Integer, db.ForeignKey("accounts.id"), nullable=False
     )  # Foreign Key
 
     amount = db.Column(db.Numeric(10, 2), nullable=False)

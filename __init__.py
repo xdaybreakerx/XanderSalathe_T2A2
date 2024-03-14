@@ -8,6 +8,7 @@ from .extensions import db, ma, bcrypt, jwt
 def create_app():
     app = Flask(__name__)
 
+    app.json.sort_keys = False
     # configs
     app.config["SQLALCHEMY_DATABASE_URI"] = environ.get("DATABASE_URL")
     app.config["JWT_SECRET_KEY"] = environ.get("JWT_SECRET_KEY")
@@ -25,5 +26,9 @@ def create_app():
     from .controllers.auth_controller import auth_bp
 
     app.register_blueprint(auth_bp)
+    
+    from .controllers.account_controller import accounts_bp
+    
+    app.register_blueprint(accounts_bp)
 
     return app

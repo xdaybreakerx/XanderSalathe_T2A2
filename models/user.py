@@ -7,7 +7,10 @@ from ..extensions import db, ma
 
 VALID_ROLE = ("User", "Admin", "Auditor")
 
+
 class User(db.Model):
+    __tablename__ = "users"
+
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
@@ -16,13 +19,24 @@ class User(db.Model):
     date_created = db.Column(db.DateTime, default=datetime.utcnow)
     last_login = db.Column(db.DateTime, onupdate=datetime.utcnow)
 
+    accounts = db.relationship("Account", back_populates="user", cascade="all, delete")
+
 
 class UserSchema(ma.Schema):
-    
     role = fields.String(validate=OneOf(VALID_ROLE))
-    
+
+    account = fields.List(fields.Nested("AccountSchema", exclude=["user"]))
+
     class Meta:
-        fields = ("id", "username", "email", "password_hash", "role", "date_created", "last_login")
+        fields = (
+            "id",
+            "username",
+            "email",
+            "password_hash",
+            "role",
+            "date_created",
+            "last_login",
+        )
 
 
 user_schema = UserSchema(exclude=["password_hash"])

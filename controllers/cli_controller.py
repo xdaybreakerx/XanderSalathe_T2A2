@@ -1,10 +1,10 @@
-from datetime import date
-
 from flask import Blueprint
 
 from ..extensions import db, bcrypt
 
 from ..models.user import User
+
+from ..models.account import Account
 
 db_commands = Blueprint("table", __name__)
 
@@ -45,6 +45,15 @@ def seed_tables():
     ]
 
     db.session.add_all(users)
+
+    accounts = [
+        Account(account_type="Savings", balance=1234.56, user=users[0]),
+        Account(account_type="Credit", balance=10000.00, user=users[1]),
+        Account(account_type="Holiday", balance=9876.54, user=users[2]),
+    ]
+
+    db.session.add_all(accounts)
+
     db.session.commit()
 
     print("Tables seeded")

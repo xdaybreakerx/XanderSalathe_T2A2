@@ -7,7 +7,10 @@ from extensions import db
 from models.account import Account, account_schema, accounts_schema
 from models.transaction import Transaction, transaction_schema, transactions_schema
 
+from controllers.transaction_controller import transactions_bp
+
 accounts_bp = Blueprint("accounts", __name__, url_prefix="/accounts")
+accounts_bp.register_blueprint(transactions_bp)
 
 
 # http://localhost:8080/accounts - POST

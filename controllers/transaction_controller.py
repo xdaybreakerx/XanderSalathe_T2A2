@@ -5,10 +5,13 @@ from extensions import db
 from models.account import Account
 from models.transaction import Transaction, transaction_schema
 
-transactions_bp = Blueprint("transactions", __name__, url_prefix="/<int:account_id>/transactions")
+transactions_bp = Blueprint(
+    "transactions", __name__, url_prefix="/<int:account_id>/transactions"
+)
+
 
 # http://localhost:8080/accounts/id/transactions - POST
-@transactions_bp.route("/<int:account_id>/transactions", methods=["POST"])
+@transactions_bp.route("/", methods=["POST"])
 @jwt_required()
 def create_transaction(account_id):
     body_data = request.get_json()
@@ -32,9 +35,7 @@ def create_transaction(account_id):
 
 
 # http://localhost:8080/accounts/id/transactions/id - PUT, PATCH
-@transactions_bp.route(
-    "/<int:account_id>/transactions/<int:transaction_id>", methods=["PUT", "PATCH"]
-)
+@transactions_bp.route("/<int:transaction_id>", methods=["PUT", "PATCH"])
 @jwt_required()
 def update_transaction(account_id, transaction_id):
     body_data = request.get_json()
@@ -61,9 +62,7 @@ def update_transaction(account_id, transaction_id):
 
 
 # http://localhost:8080/accounts/id/transactions/id - DELETE
-@transactions_bp.route(
-    "/<int:account_id>/transactions/<int:transaction_id>", methods=["DELETE"]
-)
+@transactions_bp.route("/<int:transaction_id>", methods=["DELETE"])
 @jwt_required()
 def delete_transaction(account_id, transaction_id):
     stmt = db.select(Transaction).filter_by(id=transaction_id, account_id=account_id)

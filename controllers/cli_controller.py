@@ -6,7 +6,9 @@ from ..models.user import User
 
 from ..models.account import Account
 
-db_commands = Blueprint("table", __name__)
+from ..models.transaction import Transaction
+
+db_commands = Blueprint("db", __name__)
 
 
 @db_commands.cli.command("create")
@@ -51,8 +53,15 @@ def seed_tables():
         Account(account_type="Credit", balance=10000.00, user=users[1]),
         Account(account_type="Holiday", balance=9876.54, user=users[2]),
     ]
-
     db.session.add_all(accounts)
+
+    transactions = [
+        Transaction(account=accounts[0], amount=-45.67, description="Spotify"),
+        Transaction(account=accounts[1], amount=-123.45, description="Netflix"),
+        Transaction(account=accounts[1], amount=-234.56, description="Leetcode"),
+        Transaction(account=accounts[2], amount=-10283, description="Travel Insurance"),
+    ]
+    db.session.add_all(transactions)
 
     db.session.commit()
 

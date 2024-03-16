@@ -13,19 +13,35 @@ class Account(db.Model):
     user_id = db.Column(
         db.Integer, db.ForeignKey("users.id"), nullable=False
     )  # foreign key
+
     account_type = db.Column(db.String(50), nullable=False)
     balance = db.Column(db.Numeric(10, 2), nullable=False)
     date_created = db.Column(db.DateTime, default=datetime.utcnow)
 
-    # Relationship to User
+    # Relationships
     user = db.relationship("User", back_populates="accounts")
+    transactions = db.relationship(
+        "Transaction", back_populates="account", cascade="all, delete"
+    )
 
 
 class AccountSchema(ma.Schema):
+
     user = fields.Nested("UserSchema", only=["username", "email"])
 
+    transactions = fields.List(
+        fields.Nested("TransactionSchema", only=("id", "amount", "description"))
+    )
+
     class Meta:
-        fields = ("id", "account_type", "balance", "date_created", "user")
+        fields = (
+            "id",
+            "account_type",
+            "balance",
+            "transactions",
+            "date_created",
+            "user",
+        )
         ordered = True
 
 

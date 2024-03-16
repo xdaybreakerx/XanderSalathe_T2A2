@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from marshmallow import fields, validates
-from marshmallow.validate import OneOf
+from marshmallow.validate import Length, And, Regexp
 
 from extensions import db, ma
 
@@ -26,6 +26,15 @@ class Account(db.Model):
 
 
 class AccountSchema(ma.Schema):
+
+    account_type = fields.String(
+        validate=And(
+            Length(min=2, error="Title must be at least 2 characters long"),
+            Regexp(
+                "^[a-zA-Z0-9 ]+$", error="Title can only have alphanumeric characters"
+            ),
+        ),
+    )
 
     user = fields.Nested("UserSchema", only=["username", "email"])
 

@@ -59,6 +59,7 @@ def seed_tables():
         Transaction(account=accounts[0], amount=45.67, description="Spotify"),
         Transaction(account=accounts[1], amount=123.45, description="Netflix"),
         Transaction(account=accounts[1], amount=234.56, description="Leetcode"),
+        Transaction(account=accounts[2], amount=10283, description="Travel Insurance"),
     ]
     db.session.add_all(transactions)
 

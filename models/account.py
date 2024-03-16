@@ -20,7 +20,9 @@ class Account(db.Model):
 
     # Relationships
     user = db.relationship("User", back_populates="accounts")
-    transactions = db.relationship("Transaction", back_populates="account")
+    transactions = db.relationship(
+        "Transaction", back_populates="account", cascade="all, delete"
+    )
 
 
 class AccountSchema(ma.Schema):

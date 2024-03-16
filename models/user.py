@@ -3,7 +3,7 @@ from datetime import datetime
 from marshmallow import fields, validates
 from marshmallow.validate import OneOf
 
-from ..extensions import db, ma
+from extensions import db, ma
 
 VALID_ROLE = ("User", "Admin", "Auditor")
 

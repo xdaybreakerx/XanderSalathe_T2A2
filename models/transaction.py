@@ -23,7 +23,7 @@ class Transaction(db.Model):
 
 class TransactionSchema(ma.Schema):
     account = fields.Nested("AccountSchema", exclude=["transactions"])
-    
+
     class Meta:
         fields = ("id", "amount", "description", "transaction_date", "account")
         ordered = True
@@ -31,12 +31,3 @@ class TransactionSchema(ma.Schema):
 
 transaction_schema = TransactionSchema()
 transactions_schema = TransactionSchema(many=True)
-
-#### 
-####
-####
-####
-####
-# UP TO:
-# T2 WEEK 6 THURSDAY: CONTINUE ON THE FLASK API - CRUD OF COMMENT
-# https://ait.instructure.com/courses/5166/pages/conference-recordings-term-2

@@ -2,7 +2,7 @@ from os import environ
 
 from flask import Flask
 
-from .extensions import db, ma, bcrypt, jwt
+from extensions import db, ma, bcrypt, jwt
 
 
 def create_app():
@@ -19,15 +19,15 @@ def create_app():
     bcrypt.init_app(app)
     jwt.init_app(app)
 
-    from .controllers.cli_controller import db_commands
+    from controllers.cli_controller import db_commands
 
     app.register_blueprint(db_commands)
 
-    from .controllers.auth_controller import auth_bp
+    from controllers.auth_controller import auth_bp
 
     app.register_blueprint(auth_bp)
     
-    from .controllers.account_controller import accounts_bp
+    from controllers.account_controller import accounts_bp
     
     app.register_blueprint(accounts_bp)
 

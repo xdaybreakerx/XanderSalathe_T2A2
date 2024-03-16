@@ -1,12 +1,12 @@
 from flask import Blueprint
 
-from ..extensions import db, bcrypt
+from extensions import db, bcrypt
 
-from ..models.user import User
+from models.user import User
 
-from ..models.account import Account
+from models.account import Account
 
-from ..models.transaction import Transaction
+from models.transaction import Transaction
 
 db_commands = Blueprint("db", __name__)
 

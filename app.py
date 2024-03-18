@@ -33,5 +33,9 @@ def create_app():
     from controllers.account_controller import accounts_bp
 
     app.register_blueprint(accounts_bp)
+    
+    from controllers.category_controller import categories_bp
+    
+    app.register_blueprint(categories_bp)
 
     return app

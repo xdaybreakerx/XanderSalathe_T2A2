@@ -3,7 +3,7 @@ from datetime import datetime
 from marshmallow import fields, validates
 from marshmallow.validate import Length, And, Regexp
 
-from extensions import db, ma
+from extensions.extensions import db, ma
 
 
 class Account(db.Model):

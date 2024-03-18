@@ -2,7 +2,7 @@ from datetime import datetime
 
 from marshmallow import fields
 
-from extensions import db, ma
+from extensions.extensions import db, ma
 
 
 class Transaction(db.Model):

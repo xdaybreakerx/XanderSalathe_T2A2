@@ -3,7 +3,7 @@ from os import environ
 from flask import Flask, jsonify
 from marshmallow.exceptions import ValidationError
 
-from extensions import db, ma, bcrypt, jwt
+from extensions.extensions import db, ma, bcrypt, jwt
 
 
 def create_app():
@@ -45,7 +45,7 @@ def create_app():
     def validation_error(error):
         return {"error": error.messages}, 400
     
-    from controllers.cli_controller import db_commands
+    from commands.db_commands import db_commands
 
     app.register_blueprint(db_commands)
 

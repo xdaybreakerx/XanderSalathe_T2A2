@@ -1,6 +1,6 @@
 from flask import Blueprint
 
-from extensions import db, bcrypt
+from extensions.extensions import db, bcrypt
 
 from models.user import User
 

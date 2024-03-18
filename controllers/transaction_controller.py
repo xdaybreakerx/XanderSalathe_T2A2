@@ -1,9 +1,13 @@
-from flask import Blueprint, request
+from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
-from extensions import db
+from extensions.extensions import db
+from utils.auth_utils import role_required, is_user_in_role
+
 from models.account import Account
 from models.transaction import Transaction, transaction_schema
+from models.user import User
+
 
 transactions_bp = Blueprint(
     "transactions", __name__, url_prefix="/<int:account_id>/transactions"
@@ -37,6 +41,8 @@ def create_transaction(account_id):
 # http://localhost:8080/accounts/id/transactions/id - PUT, PATCH
 @transactions_bp.route("/<int:transaction_id>", methods=["PUT", "PATCH"])
 @jwt_required()
+# Only an Admin can update a transaction
+@role_required(["Admin"])
 def update_transaction(account_id, transaction_id):
     body_data = request.get_json()
     stmt = db.select(Transaction).filter_by(id=transaction_id, account_id=account_id)
@@ -64,6 +70,8 @@ def update_transaction(account_id, transaction_id):
 # http://localhost:8080/accounts/id/transactions/id - DELETE
 @transactions_bp.route("/<int:transaction_id>", methods=["DELETE"])
 @jwt_required()
+# Only an Admin can delete a transaction
+@role_required(["Admin"])
 def delete_transaction(account_id, transaction_id):
     stmt = db.select(Transaction).filter_by(id=transaction_id, account_id=account_id)
     transaction = db.session.scalar(stmt)

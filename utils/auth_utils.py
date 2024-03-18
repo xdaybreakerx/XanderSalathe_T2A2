@@ -1,10 +1,11 @@
 from extensions.extensions import db
-from flask import jsonify 
+from flask import jsonify
 import functools
 
 from models.user import User
 
 from flask_jwt_extended import get_jwt_identity
+
 
 # Check if the current user has one of the specified roles.
 def is_user_in_role(roles):

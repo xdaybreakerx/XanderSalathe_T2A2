@@ -6,11 +6,12 @@ from sqlalchemy.exc import IntegrityError
 from psycopg2 import errorcodes
 
 from extensions.extensions import db, bcrypt
+
 from models.user import User, user_schema
 
 auth_bp = Blueprint("auth", __name__, url_prefix="/auth")
 
-
+# http://localhost:8080/auth/register - POST
 @auth_bp.route("/register", methods=["POST"])
 def auth_register():
     try:
@@ -39,6 +40,7 @@ def auth_register():
         if err.orig.pgcode == errorcodes.UNIQUE_VIOLATION:
             return {"error": "Email address already in use"}, 409
 
+# http://localhost:8080/auth/login - POST
 @auth_bp.route("/login", methods=["POST"])
 def auth_login():
     # get the data from the request body
@@ -47,9 +49,13 @@ def auth_login():
     stmt = db.select(User).filter_by(email=body_data.get("email"))
     user = db.session.scalar(stmt)
     # If user exists and password is correct
-    if user and bcrypt.check_password_hash(user.password_hash, body_data.get("password")):
+    if user and bcrypt.check_password_hash(
+        user.password_hash, body_data.get("password")
+    ):
         # create jwt
-        token = create_access_token(identity=str(user.id), expires_delta=timedelta(days=1))
+        token = create_access_token(
+            identity=str(user.id), expires_delta=timedelta(days=1)
+        )
         # return the token along with the user info
         return {"email": user.email, "token": token, "role": user.role}
     # else

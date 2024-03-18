@@ -3,6 +3,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from extensions.extensions import db
 from utils.auth_utils import is_user_in_role
+
 from models.account import Account, account_schema, accounts_schema
 
 from controllers.transaction_controller import transactions_bp
@@ -88,7 +89,7 @@ def update_account(account_id):
         account.account_type = (body_data.get("account_type") or account.account_type,)
         account.balance = body_data.get("balance") or account.balance
         db.session.commit()
-        return account_schema.dump(account)
+        return account_schema.dump(account), 201
     else:
         return {"error": "Unauthorized access"}, 403
 

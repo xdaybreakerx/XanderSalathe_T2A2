@@ -12,6 +12,9 @@ class Transaction(db.Model):
     account_id = db.Column(
         db.Integer, db.ForeignKey("accounts.id"), nullable=False
     )  # Foreign Key
+    category_id = db.Column(
+        db.Integer, db.ForeignKey("categories.id"), nullable=True
+    )  # Foreign Key
 
     amount = db.Column(db.Numeric(10, 2), nullable=False)
     description = db.Column(db.String(255), nullable=True)
@@ -32,7 +35,7 @@ class TransactionSchema(ma.Schema):
             "description",
             "transaction_date",
             "account",
-            "categories",
+            "category",
         )
         ordered = True
 

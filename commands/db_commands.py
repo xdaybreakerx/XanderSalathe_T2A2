@@ -8,6 +8,8 @@ from models.account import Account
 
 from models.transaction import Transaction
 
+from models.category import Category
+
 db_commands = Blueprint("db", __name__)
 
 
@@ -27,7 +29,7 @@ def drop_tables():
 def seed_tables():
     users = [
         User(
-            username="Admin User",
+            username="Admin",
             email="admin@email.com",
             password_hash=bcrypt.generate_password_hash("123456").decode("utf-8"),
             role="Admin",
@@ -55,13 +57,26 @@ def seed_tables():
     ]
     db.session.add_all(accounts)
 
+    categories = [
+        Category(
+            name="Subscriptions",
+            description="Weekly, Monthly, or Yearly subscriptions.",
+        ),
+        Category(
+            name="Insurance",
+            description="Inclusive of Health, Travel, Home and Contents, Pet, and Car insurance",
+        ),
+    ]
+    db.session.add_all(categories)
+    
     transactions = [
-        Transaction(account=accounts[0], amount=-45.67, description="Spotify"),
-        Transaction(account=accounts[1], amount=-123.45, description="Netflix"),
-        Transaction(account=accounts[1], amount=-234.56, description="Leetcode"),
-        Transaction(account=accounts[2], amount=-10283, description="Travel Insurance"),
+        Transaction(account=accounts[0], amount=-45.67, description="Spotify", category=categories[0]),
+        Transaction(account=accounts[1], amount=-123.45, description="Netflix", category=categories[0]),
+        Transaction(account=accounts[1], amount=-234.56, description="Leetcode", category=categories[0]),
+        Transaction(account=accounts[2], amount=-10283, description="Travel Insurance", category=categories[1]),
     ]
     db.session.add_all(transactions)
+
 
     db.session.commit()
 

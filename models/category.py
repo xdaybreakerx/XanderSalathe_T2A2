@@ -6,7 +6,8 @@ from extensions.extensions import db, ma
 class Category(db.Model):
     __tablename__ = "categories"
 
-    category_id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
+
     name = db.Column(db.String(100), nullable=False)
     description = db.Column(db.String(255), nullable=True)
 
@@ -18,4 +19,8 @@ class CategorySchema(ma.Schema):
     transactions = fields.Nested("TransactionSchema", exclude=["categories"])
 
     class Meta:
-        fields("id", "name", "description")
+        fields = ("id", "name", "description")
+
+
+category_schema = CategorySchema()
+categories_schema = CategorySchema(many=True)

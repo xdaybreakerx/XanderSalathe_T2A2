@@ -12,6 +12,10 @@ class Transaction(db.Model):
     account_id = db.Column(
         db.Integer, db.ForeignKey("accounts.id"), nullable=False
     )  # Foreign Key
+    category_id = db.Column(
+        db.Integer, db.ForeignKey("categories.id"), nullable=True
+    )  # Foreign Key
+    # Transaction categories are optional, and as such can be nullable
 
     amount = db.Column(db.Numeric(10, 2), nullable=False)
     description = db.Column(db.String(255), nullable=True)
@@ -19,13 +23,21 @@ class Transaction(db.Model):
 
     # Relationship to Account
     account = db.relationship("Account", back_populates="transactions")
+    category = db.relationship("Category", back_populates="transactions")
 
 
 class TransactionSchema(ma.Schema):
     account = fields.Nested("AccountSchema", exclude=["transactions"])
 
     class Meta:
-        fields = ("id", "amount", "description", "transaction_date", "account")
+        fields = (
+            "id",
+            "amount",
+            "description",
+            "transaction_date",
+            "account",
+            "category",
+        )
         ordered = True
 
 

@@ -1,5 +1,6 @@
 from flask import jsonify
 from marshmallow.exceptions import ValidationError
+from sqlalchemy.exc import IntegrityError
 
 def register_error_handlers(app):
     @app.errorhandler(400)
@@ -24,4 +25,8 @@ def register_error_handlers(app):
 
     @app.errorhandler(ValidationError)
     def validation_error(error):
+        return {"error": error.messages}, 400
+    
+    @app.errorhandler(IntegrityError)
+    def integrity_error(error):
         return {"error": error.messages}, 400

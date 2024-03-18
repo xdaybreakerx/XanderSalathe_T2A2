@@ -1,4 +1,5 @@
 from marshmallow import fields
+from marshmallow.validate import Length, And, Regexp
 
 from extensions.extensions import db, ma
 
@@ -16,6 +17,15 @@ class Category(db.Model):
 
 
 class CategorySchema(ma.Schema):
+
+    name = fields.String(
+        validate=And(
+            Length(min=2, error="Category name must be at least 2 characters long"),
+            Regexp(
+                "^[a-zA-Z0-9 ]+$", error="Category name can only have alphanumeric characters"
+            ),
+        ),
+    )
     transactions = fields.Nested("TransactionSchema", exclude=["categories"])
 
     class Meta:

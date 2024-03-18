@@ -19,13 +19,21 @@ class Transaction(db.Model):
 
     # Relationship to Account
     account = db.relationship("Account", back_populates="transactions")
+    category = db.relationship("Category", back_populates="transactions")
 
 
 class TransactionSchema(ma.Schema):
     account = fields.Nested("AccountSchema", exclude=["transactions"])
 
     class Meta:
-        fields = ("id", "amount", "description", "transaction_date", "account")
+        fields = (
+            "id",
+            "amount",
+            "description",
+            "transaction_date",
+            "account",
+            "categories",
+        )
         ordered = True
 
 

@@ -19,7 +19,6 @@ class User(db.Model):
     password_hash = db.Column(db.String(128), nullable=False)
     role = db.Column(db.String(50), nullable=False, default="User")
     date_created = db.Column(db.DateTime, default=datetime.utcnow)
-    last_login = db.Column(db.DateTime, onupdate=datetime.utcnow)
 
     accounts = db.relationship("Account", back_populates="user", cascade="all, delete")
 
@@ -54,7 +53,6 @@ class UserSchema(ma.Schema):
             "password_hash",
             "role",
             "date_created",
-            "last_login",
             "accounts",
         )
 

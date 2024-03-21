@@ -1,15 +1,29 @@
 from datetime import timedelta
 
 from flask import Blueprint, request
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_access_token, jwt_required
 from sqlalchemy.exc import IntegrityError
 from psycopg2 import errorcodes
 
 from extensions.extensions import db, bcrypt
 
-from models.user import User, user_schema
+from models.user import User, user_schema, users_schema
+
+from utils.auth_utils import role_required
 
 auth_bp = Blueprint("auth", __name__, url_prefix="/auth")
+
+
+# http://localhost:8080/auth/users - GET
+@auth_bp.route("/users")
+@jwt_required()
+@role_required(["Auditor"])
+def get_all_users():
+    stmt = db.select(User).order_by(User.date_created.desc())
+    users = db.session.scalars(stmt)
+
+    return users_schema.dump(users)
+
 
 # http://localhost:8080/auth/register - POST
 @auth_bp.route("/register", methods=["POST"])
@@ -40,6 +54,7 @@ def auth_register():
         if err.orig.pgcode == errorcodes.UNIQUE_VIOLATION:
             return {"error": "Email address already in use"}, 409
 
+
 # http://localhost:8080/auth/login - POST
 @auth_bp.route("/login", methods=["POST"])
 def auth_login():
@@ -62,3 +77,18 @@ def auth_login():
     else:
         # return error
         return {"error": "Invalid email or password"}, 401
+
+# http://localhost:8080/auth/id - DELETE
+@auth_bp.route("/<int:user_id>", methods=["DELETE"])
+@jwt_required()
+@role_required(["Admin"])
+def delete_user(user_id):
+    stmt = db.select(User).filter_by(id=user_id)
+    user = db.session.scalar(stmt)
+    
+    if not user:
+        return {"error": f"User with id {user_id} not found"}, 404
+    
+    db.session.delete(user)
+    db.session.commit()
+    return {"message": f"User '{user.username}', '{user.role}' deleted successfully"}

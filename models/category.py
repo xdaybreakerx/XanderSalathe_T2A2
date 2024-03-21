@@ -1,7 +1,9 @@
-from marshmallow import fields
+from marshmallow import fields, pre_load
 from marshmallow.validate import Length, And, Regexp
 
 from extensions.extensions import db, ma
+
+from utils.input_utils import sanitize_input
 
 
 class Category(db.Model):
@@ -22,11 +24,20 @@ class CategorySchema(ma.Schema):
         validate=And(
             Length(min=2, error="Category name must be at least 2 characters long"),
             Regexp(
-                "^[a-zA-Z0-9 ]+$", error="Category name can only have alphanumeric characters"
+                "^[a-zA-Z0-9 ]+$",
+                error="Category name can only have alphanumeric characters",
             ),
         ),
     )
     transactions = fields.Nested("TransactionSchema", exclude=["categories"])
+
+    @pre_load
+    def sanitize_data(self, data, **kwargs):
+        if data.get("name"):
+            data["name"] = sanitize_input(data["name"])
+        if data.get("description"):
+            data["description"] = sanitize_input(data["description"])
+        return data
 
     class Meta:
         fields = ("id", "name", "description")

@@ -12,6 +12,7 @@ transactions_bp = Blueprint(
     "transactions", __name__, url_prefix="/<int:account_id>/transactions"
 )
 
+
 # Add a new transaction
 # http://localhost:8080/accounts/id/transactions - POST
 @transactions_bp.route("/", methods=["POST"])
@@ -21,14 +22,14 @@ def create_transaction(account_id):
     body_data = request.get_json()
     stmt = db.select(Account).filter_by(id=account_id)
     account = db.session.scalar(stmt)
-    
+
     # if no account is found by the id, a transaction cannot be added
     if not account:
         return {"error": f"Account with id {account_id} not found"}, 404
 
     # a user can only add transactions to their own account
     # a admin can add transactions to any account
-    
+
     if is_user_in_role(["Admin"]) or int(account.user_id) == int(user_id):
         transaction = Transaction(
             amount=body_data.get("amount"),
@@ -42,7 +43,7 @@ def create_transaction(account_id):
 
         db.session.commit()
         return transaction_schema.dump(transaction), 201
-    
+
     # if a user tries to add a transaction to an account they do not own, an authorization error is returned
     else:
         return {"error": "Unauthorized access"}, 403

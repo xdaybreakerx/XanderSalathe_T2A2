@@ -1,9 +1,11 @@
 from datetime import datetime
 
-from marshmallow import fields
+from marshmallow import fields, pre_load
 from marshmallow.validate import Length, And, Regexp
 
 from extensions.extensions import db, ma
+
+from utils.input_utils import sanitize_input
 
 
 class Account(db.Model):
@@ -41,6 +43,13 @@ class AccountSchema(ma.Schema):
     transactions = fields.List(
         fields.Nested("TransactionSchema", only=("id", "amount", "description"))
     )
+
+    @pre_load
+    def sanitize_data(self, data, **kwargs):
+        # Sanitize the account_type field
+        if data.get("account_type"):
+            data["account_type"] = sanitize_input(data["account_type"])
+        return data
 
     class Meta:
         fields = (

@@ -1,8 +1,10 @@
 from datetime import datetime
 
-from marshmallow import fields
+from marshmallow import fields, pre_load
 
 from extensions.extensions import db, ma
+
+from utils.input_utils import sanitize_input
 
 
 class Transaction(db.Model):
@@ -28,6 +30,13 @@ class Transaction(db.Model):
 
 class TransactionSchema(ma.Schema):
     account = fields.Nested("AccountSchema", exclude=["transactions"])
+    description = fields.String()
+
+    @pre_load
+    def sanitize_data(self, data, **kwargs):
+        if data.get("description"):
+            data["description"] = sanitize_input(data["description"])
+        return data
 
     class Meta:
         fields = (

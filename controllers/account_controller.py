@@ -14,7 +14,7 @@ accounts_bp = Blueprint("accounts", __name__, url_prefix="/accounts")
 accounts_bp.register_blueprint(transactions_bp)
 
 
-# Used to create a new Account in relation to a User
+# Used to create a new Account in relation to a User.
 # http://localhost:8080/accounts - POST
 @accounts_bp.route("/", methods=["POST"])
 @jwt_required()
@@ -34,7 +34,7 @@ def create_account():
     return account_schema.dump(account), 201
 
 
-# Get a list of all accounts
+# Get a list of all accounts from the database.
 # http://localhost:8080/accounts - GET
 @accounts_bp.route("/")
 @jwt_required()
@@ -77,7 +77,8 @@ def get_account(account_id):
         return {"error": "Not authorized to view this account"}, 403
 
 
-# Update an existing account
+# Updates an existing Account identified by its ID.
+# Only Admins can update Accounts not owned by themselves
 # http://localhost:8080/accounts/id - PUT, PATCH
 @accounts_bp.route("/<int:account_id>", methods=["PUT", "PATCH"])
 @jwt_required()
@@ -102,7 +103,9 @@ def update_account(account_id):
         return {"error": "Unauthorized access"}, 403
 
 
-# Delete an existing account
+# Delete an Account
+# Users are only able to delete their own account
+# Otherwise users with the 'Admin' role can delete all accounts regardless of ownership
 # http://localhost:8080/accounts/id - DELETE
 @accounts_bp.route("/<int:account_id>", methods=["DELETE"])
 @jwt_required()

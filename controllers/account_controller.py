@@ -57,7 +57,7 @@ def get_all_accounts():
     return accounts_schema.dump(accounts), 200
 
 
-# Get a specific account
+# Retrieves a specific Account by its ID from the database.
 # http://localhost:8080/accounts/id - GET
 @accounts_bp.route("/<int:account_id>")
 @jwt_required()

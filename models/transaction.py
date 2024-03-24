@@ -23,7 +23,7 @@ class Transaction(db.Model):
     description = db.Column(db.String(255), nullable=True)
     transaction_date = db.Column(db.DateTime, default=datetime.utcnow)
 
-    # Relationship to Account
+    # Relationships
     account = db.relationship("Account", back_populates="transactions")
     category = db.relationship("Category", back_populates="transactions")
 
